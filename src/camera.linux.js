@@ -11,7 +11,7 @@ import {
 import ffmpeg from "fluent-ffmpeg";
 
 export const getWebcam = (finder = () => true) => {
-  return Promise.reject();
+  return Promise.resolve("no camera object needed on linux");
 };
 
 export const takePhoto = (fileName, { camera } = {}) => {
@@ -56,15 +56,28 @@ export const timelapse = async ({
   const startTime = Date.now();
   const totalTime = seconds * 1000;
 
+  let timer = -1;
   const updater = () => {
-    onProgress((Date.now() - startTime) / totalTime);
+    clearTimeout(timer);
+    const perc = (Date.now() - startTime) / totalTime;
+    onProgress(perc);
+
+    if (perc < 1) {
+      timer = setTimeout(() => {
+        updater();
+      }, 500);
+    }
   };
 
   updater();
 
+  const patternName = filePrefix(
+    iteratedPatternFileName(path.basename(baseFileName))
+  );
+
   const outputFile = await libcamera.still({
     config: {
-      output: filePrefix(iteratedPatternFileName(path.basename(baseFileName))),
+      output: patternName,
       nopreview: true,
       timelapse: totalTime / fps,
       timeout: totalTime,
@@ -73,5 +86,7 @@ export const timelapse = async ({
     },
   });
 
-  return saveTimelapse(path.basename(outputFile), { fps });
+  console.log("out of interest ", outputFile);
+
+  return saveTimelapse(path.basename(baseFileName), { fps });
 };

@@ -7,6 +7,7 @@ import { getSignedFile } from "./src/s3.js";
 
 (async () => {
   try {
+    console.log(`Platform: ${process.platform}`);
     const { getWebcam, takePhoto, timelapse, uploadFile } = await initialize();
 
     const camera = await getWebcam();
@@ -23,7 +24,9 @@ import { getSignedFile } from "./src/s3.js";
       camera,
       seconds,
       onProgress: (perc) => {
-        console.log(`Timelapse percentage: ${perc}`);
+        process.stdout.write(
+          `Timelapse Percentage: ${Math.round(perc * 100)}%\r`
+        );
       },
     });
     console.log(`Captured test timelapse: ${timelapseVideo}`);
