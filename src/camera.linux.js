@@ -79,7 +79,7 @@ export const timelapse = async ({
     config: {
       output: patternName,
       nopreview: true,
-      timelapse: totalTime / fps,
+      timelapse: 1000 / fps,
       timeout: totalTime,
       width,
       height,

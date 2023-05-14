@@ -10,17 +10,28 @@ const getCameraModule = () => {
   return import(`./camera.${process.platform}.js`);
 };
 
+const getInteractModule = () => {
+  return import(`./interact.${process.platform}.js`);
+};
+
 export const initialize = async () => {
   await deleteAsync(tmpFile());
   await ensureDir(tmpFile());
   await ensureDir(outputFile());
 
   const camera = await getCameraModule();
+  const interact = await getInteractModule();
+
+  await interact.initialize();
 
   return {
     ...camera,
+    ...interact,
     uploadFile: (fileName) => {
       return uploadFile(path.basename(fileName), fs.readFileSync(fileName));
+    },
+    destroy: async () => {
+      await interact.destroy();
     },
   };
 };

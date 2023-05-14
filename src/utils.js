@@ -37,3 +37,7 @@ export const iteratedPatternFileName = (fileName, { padNum = 4 } = {}) => {
 export const stripExtension = (fileName) => {
   return fileName.split(path.extname(fileName)).join("");
 };
+
+export const timeout = (time = 1000) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};

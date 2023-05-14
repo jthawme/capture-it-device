@@ -19,6 +19,7 @@
     "fs-extra": "^11.1.1",
     "libcamera": "^1.0.7",
     "node-webcam": "^0.8.1",
-    "rpi-gpio": "^2.1.7"
+    "rpi-gpio": "^2.1.7",
+    "rpi-gpio-buttons": "^2.0.1"
   }
 }
