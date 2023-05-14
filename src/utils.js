@@ -26,6 +26,14 @@ export const iteratedDataBasedFileName = (
   return `${pre}.${iterate}${ext}`;
 };
 
+export const iteratedPatternFileName = (fileName, { padNum = 4 } = {}) => {
+  const ext = path.extname(fileName);
+
+  const pre = fileName.split(ext).shift();
+
+  return `${pre}.%0${padNum}d${ext}`;
+};
+
 export const stripExtension = (fileName) => {
   return fileName.split(path.extname(fileName)).join("");
 };

@@ -7,7 +7,7 @@ import path from "path";
 import fs from "fs-extra";
 
 const getCameraModule = () => {
-  return import(`./camera.darwin.js`);
+  return import(`./camera.${process.platform}.js`);
 };
 
 export const initialize = async () => {

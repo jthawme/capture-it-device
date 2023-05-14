@@ -1,4 +1,5 @@
 import NodeWebcam from "node-webcam";
+import path from "path";
 import {
   dateBasedFileName,
   iteratedDataBasedFileName,
@@ -60,6 +61,7 @@ export const timelapse = ({
   seconds = 60,
   fps = 10,
   frameTimeMin = 500,
+  baseFileName = dateBasedFileName(),
   onProgress = () => false,
   filePrefix = (file) => tmpFile(file),
 } = {}) => {
@@ -68,8 +70,6 @@ export const timelapse = ({
   const totalFrames = Math.ceil((seconds * 1000) / frameTimeMin);
 
   const files = [];
-
-  const baseFileName = dateBasedFileName();
 
   return new Promise((resolve, reject) => {
     const run = async (idx = 0) => {
@@ -83,7 +83,9 @@ export const timelapse = ({
       try {
         const timeBefore = Date.now();
         const file = await takePhoto(
-          filePrefix(iteratedDataBasedFileName(idx, baseFileName)),
+          filePrefix(
+            iteratedDataBasedFileName(idx, path.basename(baseFileName))
+          ),
           { camera }
         );
         const deltaTime = Date.now() - timeBefore;
@@ -99,6 +101,6 @@ export const timelapse = ({
 
     run();
   }).then((files) => {
-    return saveTimelapse(baseFileName, { fps });
+    return saveTimelapse(path.basename(baseFileName), { fps });
   });
 };
