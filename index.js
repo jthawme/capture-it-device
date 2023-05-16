@@ -57,6 +57,7 @@ let end = () => false;
               const blinkUnlisten = blink({
                 interval: 500,
               });
+              await timeout(1000);
               const file = await timelapse({
                 baseFileName: fileName,
                 camera,
@@ -74,7 +75,7 @@ let end = () => false;
           });
           await uploadFile(localFile);
           const presigned = await getSignedFile(path.basename(localFile));
-          await notifyEmail(presigned);
+          await notifyEmail(presigned, localFile);
           await blinkUnlisten();
 
           console.log(`URL: ${presigned}`);

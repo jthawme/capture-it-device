@@ -5,7 +5,6 @@ import { dateBasedFileName, outputFile, timeout } from "./src/utils.js";
 import { notifyEmail } from "./src/email.js";
 import { getSignedFile } from "./src/s3.js";
 import cleanup from "@hypercliq/shutdown-cleanup";
-import { blink } from "./src/interact.linux.js";
 
 let end = () => false;
 
@@ -30,6 +29,7 @@ let end = () => false;
       uploadFile,
       displayError,
       listenForInput,
+      blink,
       destroy,
     } = await initialize();
 
@@ -78,7 +78,7 @@ let end = () => false;
 
     console.log(`Sending email`);
     const presigned = await getSignedFile(path.basename(timelapseVideo));
-    const resp = await notifyEmail(presigned);
+    const resp = await notifyEmail(presigned, timelapseVideo);
     console.log(`email sent`);
     console.log(`URL: ${presigned}`);
 
