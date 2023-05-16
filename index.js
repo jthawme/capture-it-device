@@ -57,6 +57,7 @@ let end = () => false;
               const blinkUnlisten = blink({
                 interval: 500,
               });
+              await timeout(1000);
               const file = await timelapse({
                 baseFileName: fileName,
                 camera,
