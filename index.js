@@ -31,7 +31,7 @@ let end = () => false;
     let busy = false;
 
     try {
-      const onInput = async (input) => {
+      const onInput = async (input, time) => {
         if (busy) {
           return;
         }
@@ -41,11 +41,11 @@ let end = () => false;
             const fileName = outputFile(dateBasedFileName());
 
             if (input === "image") {
-              console.log("image");
+              console.log("image", time || 1000);
               const blinkUnlisten = blink({
                 interval: 500,
               });
-              await timeout(3000);
+              await timeout(time || 1000);
               const file = await takePhoto(fileName, { camera });
               await blinkUnlisten();
 
@@ -53,13 +53,14 @@ let end = () => false;
             }
 
             if (input === "timelapse") {
-              console.log("timelapse");
+              console.log("timelapse", time || 60);
               const blinkUnlisten = blink({
                 interval: 500,
               });
               const file = await timelapse({
                 baseFileName: fileName,
                 camera,
+                seconds: time || 60,
               });
               await blinkUnlisten();
 
