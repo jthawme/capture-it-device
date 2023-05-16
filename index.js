@@ -41,7 +41,7 @@ let end = () => false;
             const fileName = outputFile(dateBasedFileName());
 
             if (input === "image") {
-              console.log("image");
+              console.log("image", time || 1000);
               const blinkUnlisten = blink({
                 interval: 500,
               });
@@ -53,7 +53,7 @@ let end = () => false;
             }
 
             if (input === "timelapse") {
-              console.log("timelapse");
+              console.log("timelapse", time || 60);
               const blinkUnlisten = blink({
                 interval: 500,
               });
