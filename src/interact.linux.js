@@ -1,5 +1,6 @@
 import GPIO from "rpi-gpio";
-import { timeout } from "./utils.js";
+import { clamp, mapRange, timeout } from "./utils.js";
+import { ButtonManager } from "./ButtonManager.js";
 
 const gpio = GPIO.promise;
 
@@ -9,6 +10,8 @@ const PIN = {
   TIMELAPSE: 13,
   STATUS: 12,
 };
+
+const manager = new ButtonManager();
 
 export const initialize = () => {
   return Promise.all([
@@ -49,13 +52,31 @@ export const blink = ({ pin = PIN.STATUS, interval = 250 } = {}) => {
 
 export const listenForInput = (onEvent) => {
   gpio.on("change", (channel, value) => {
-    if (channel === PIN.STATIC_IMAGE && value) {
-      onEvent("image");
-    }
-    if (channel === PIN.TIMELAPSE && value) {
-      onEvent("timelapse");
-    }
+    manager.update(channel, value);
   });
+
+  manager
+    .on("long_press", (pin, time) => {
+      if (pin === PIN.STATIC_IMAGE) {
+        onEvent(
+          "image",
+          clamp(mapRange(time, 0, 3000, 1000, 6000), 1000, 6000)
+        );
+      }
+
+      if (pin === PIN.TIMELAPSE) {
+        onEvent("timelapse", clamp(mapRange(time, 0, 3000, 20, 120), 20, 120));
+      }
+    })
+    .on("click", (pin) => {
+      if (pin === PIN.STATIC_IMAGE) {
+        onEvent("image");
+      }
+
+      if (pin === PIN.TIMELAPSE) {
+        onEvent("timelapse");
+      }
+    });
 };
 
 export const destroy = () => {
