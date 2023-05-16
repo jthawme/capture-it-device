@@ -49,7 +49,7 @@ let end = () => false;
               const file = await takePhoto(fileName, { camera });
               await blinkUnlisten();
 
-              return file;
+              return fileName;
             }
 
             if (input === "timelapse") {
@@ -68,9 +68,13 @@ let end = () => false;
           };
 
           const localFile = await runCommand();
+          const blinkUnlisten = blink({
+            interval: 200,
+          });
           await uploadFile(localFile);
           const presigned = await getSignedFile(path.basename(localFile));
           await notifyEmail(presigned);
+          await blinkUnlisten();
 
           console.log(`URL: ${presigned}`);
 
