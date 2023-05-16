@@ -61,7 +61,7 @@ let end = () => false;
               const file = await timelapse({
                 baseFileName: fileName,
                 camera,
-                seconds: time || 60,
+                seconds: Math.floor(time || 60),
               });
               await blinkUnlisten();
 
