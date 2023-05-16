@@ -71,7 +71,7 @@ let end = () => false;
           const localFile = await runCommand();
           await uploadFile(localFile);
           const presigned = await getSignedFile(path.basename(localFile));
-          await notifyEmail(presigned);
+          await notifyEmail(presigned, localFile);
 
           console.log(`URL: ${presigned}`);
 
