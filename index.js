@@ -1,3 +1,5 @@
+import { initialize } from "./src/main.js";
+
 import fetch from "node-fetch";
 import { Command, InvalidArgumentError } from "commander";
 import path from "path";
@@ -12,7 +14,6 @@ import {
   setOrigin,
 } from "@shtudio/logger";
 
-import { initialize } from "./src/main.js";
 import {
   clamp,
   dateBasedFileName,
@@ -89,10 +90,13 @@ const takePhoto = async (delay = 1000) => {
 
     log(`URL: ${presigned}`);
 
+    console.log(constructMessage(COMMAND.TURN_ON_FOR, "green", 1000));
     await deleteAsync([fileName, tmpFile("*.jpg")]);
   } catch (e) {
     console.error(e);
-    logError(e.message);
+    await logError(e.message, {
+      stack: e.stack,
+    });
   }
 };
 
@@ -121,10 +125,13 @@ const takeTimelapse = async (time = 60) => {
 
     log(`URL: ${presigned}`);
 
+    console.log(constructMessage(COMMAND.TURN_ON_FOR, "green", 1000));
     await deleteAsync([file, tmpFile("*.jpg")]);
   } catch (e) {
     console.error(e);
-    logError(e.message);
+    await logError(e.message, {
+      stack: e.stack,
+    });
   }
 };
 

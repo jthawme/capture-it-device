@@ -86,7 +86,5 @@ export const timelapse = async ({
     },
   });
 
-  console.log("out of interest ", outputFile);
-
   return saveTimelapse(path.basename(baseFileName), { fps });
 };
